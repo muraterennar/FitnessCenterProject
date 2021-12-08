@@ -7,11 +7,9 @@ using System.Threading.Tasks;
 
 namespace Entities.Concreate
 {
-    public class Membership : IEntity
+    public class Subscription : IEntity
     {
         public int Id { get; set; }
-        public int UserId { get; set; }
-        public int SubscriptionId { get; set; }
-        public string SubscriptionName { get; set; }
+        public string Name { get; set; }
     }
 }

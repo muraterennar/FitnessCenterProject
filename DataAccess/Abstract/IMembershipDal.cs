@@ -1,4 +1,5 @@
 ﻿using Core.DataAccess.Abstract;
+using Core.Entities.Concreate;
 using Entities.Concreate;
 using Entities.DTOs;
 using System;
@@ -11,6 +12,6 @@ namespace DataAccess.Abstract
 {
     public interface IMembershipDal : IEntityRepository<Membership>
     {
-        List<MembershipDetailDto> GetMembershipsDetails();
+         List<Subscription> GetSubscriptions(User user);
     }
 }

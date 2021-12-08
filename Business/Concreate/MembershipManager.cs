@@ -1,5 +1,6 @@
 ﻿using Business.Abstract;
 using Business.Conctants;
+using Core.Entities.Concreate;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concreate;
@@ -43,9 +44,9 @@ namespace Business.Concreate
             return new SuccessDataResult<List<Membership>>(_membershipDal.GetAll());
         }
 
-        public IDataResult<List<MembershipDetailDto>> GetMembershipDetailDto(int id)
+        public IDataResult<List<Subscription>> GetSubscriptions(User user)
         {
-            return new SuccessDataResult<List<MembershipDetailDto>>(_membershipDal.GetMembershipsDetails(), Messages.MembershipDetailsListed);
+           return new SuccessDataResult<List<Subscription>>(_membershipDal.GetSubscriptions(user),Messages.MembershipDetailsListed);
         }
 
         public IResult Update(Membership membership)

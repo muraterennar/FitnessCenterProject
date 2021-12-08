@@ -1,4 +1,5 @@
-﻿using Core.Utilities.Results;
+﻿using Core.Entities.Concreate;
+using Core.Utilities.Results;
 using Entities.Concreate;
 using Entities.DTOs;
 using System;
@@ -13,7 +14,7 @@ namespace Business.Abstract
     {
         IDataResult<List<Membership>> GetAll();
         IDataResult<List<Membership>> Get(int id);
-        IDataResult<List<MembershipDetailDto>> GetMembershipDetailDto(int id);
+        IDataResult<List<Subscription>> GetSubscriptions(User user);
         IResult Add(Membership membership);
         IResult Update(Membership membership);
         IResult Delete(Membership membership);

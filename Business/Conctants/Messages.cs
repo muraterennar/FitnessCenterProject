@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -22,5 +23,6 @@ namespace Business.Conctants
         public static string MembershipNotUpdated = "Böyle Üyelik Yok!";
         public static string MembershipUpdated = "Üyelik Güncellendi";
         public static string MembershipDetailsListed = "Üyelik Detayları Listelendi";
+        public static string AuthorizantionDenied = "Yetkilendirme reddedildi";
     }
 }

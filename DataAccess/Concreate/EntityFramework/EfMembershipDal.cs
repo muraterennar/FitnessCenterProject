@@ -1,4 +1,5 @@
 ﻿using Core.DataAccess.Concreate.EntityFramework;
+using Core.Entities.Concreate;
 using DataAccess.Abstract;
 using Entities.Concreate;
 using Entities.DTOs;
@@ -12,31 +13,14 @@ namespace DataAccess.Concreate.EntityFramework
 {
     public class EfMembershipDal : EfEntityRepositoryBase<Membership, FitnessCenterContext>, IMembershipDal
     {
-        public List<MembershipDetailDto> GetMembershipsDetails()
+        public List<Subscription> GetSubscriptions(User user)
         {
-            using (FitnessCenterContext context = new FitnessCenterContext())
+            using (var context = new FitnessCenterContext())
             {
-                var result = from membership in context.Memberships
-                             join salary in context.SalarySubscriptions on membership.SubscriptionId equals salary.Id
-                             join semiannual in context.SemiannualSubscriptions on membership.SubscriptionId equals semiannual.Id
-                             join annual in context.AnnualSubscriptions on membership.SubscriptionId equals annual.Id
-                             select new MembershipDetailDto
-                             {
-                                 SalarySubscriptionId = salary.Id,
-                                 SalarySubscriptionName = salary.SalarySubscriptionName,
-                                 SalarySubscriptionDescription = salary.SalarySubscriptionDescription,
-                                 SalarySubscriptionPrice = salary.SalarySubscriptionPrice,
-
-                                 SemiannualSubscriptionId = semiannual.Id,
-                                 SemiannualSubscriptionName = semiannual.SemiannualSubscriptionName,
-                                 SemiannualSubscriptionDescription = semiannual.SemiannualSubscriptionsDescription,
-                                 SemiannualSubscriptionPrice = semiannual.SemiannualSubscriptionsPrice,
-
-                                 AnnualSubscriptionId = annual.Id,
-                                 AnnualSubscriptionName = annual.AnnualSubscriptionName,
-                                 AnnualSubscriptionDescription = annual.AnnualSubscriptionsDescription,
-                                 AnnualSubscriptionPrice = annual.AnnualSubscriptionsPrice
-                             };
+                var result = from subscription in context.Subscriptions
+                             join member in context.Memberships on subscription.Id equals member.SubscriptionId
+                             where member.UserId == user.Id
+                             select new Subscription { Id = member.SubscriptionId, Name = member.SubscriptionName };
 
                 return result.ToList();
             }

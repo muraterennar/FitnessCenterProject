@@ -20,8 +20,6 @@ namespace DataAccess.Concreate.EntityFramework
         public DbSet<OperationClaim> OperationClaims { get; set; }
         public DbSet<UserOperationClaim> UserOperationClaims { get; set; }
         public DbSet<Membership> Memberships { get; set; }
-        public DbSet<SalarySubscription> SalarySubscriptions { get; set; }
-        public DbSet<SemiannualSubscription> SemiannualSubscriptions { get; set; }
-        public DbSet<AnnualSubscription> AnnualSubscriptions { get; set; }
+        public DbSet<Subscription> Subscriptions { get; set; }
     }
 }
