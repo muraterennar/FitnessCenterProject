@@ -13,5 +13,6 @@ namespace Entities.Concreate
         public int UserId { get; set; }
         public int SubscriptionId { get; set; }
         public string SubscriptionName { get; set; }
+        public DateTime SubsriptionDate { get; set; }
     }
 }
