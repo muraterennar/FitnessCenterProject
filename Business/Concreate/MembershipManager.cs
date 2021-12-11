@@ -94,9 +94,9 @@ namespace Business.Concreate
         private IResult CheckIfMembershipDate(int subsId)
         {
             var result = _membershipDal.GetAll(m => m.SubsId == subsId).Any();
-            var monthlySubscription = _subscriptionService.GetDetails("").Data.Name = "Aylık Üyelik";
-            var sixMonthlySubscription = _subscriptionService.GetDetails("").Data.Name = "Altı Aylık Üyelik";
-            var yearlySubscription = _subscriptionService.GetDetails("").Data.Name = "Aylık Üyelik";
+            var monthlySubscription = _subscriptionService.GetDetails("Aylık Üyelik").Data.Name;
+            var sixMonthlySubscription = _subscriptionService.GetDetails("Altı Aylık Üyelik").Data.Name;
+            var yearlySubscription = _subscriptionService.GetDetails("Yıllık Üyelik").Data.Name;
             var find = _membershipDal.GetDetails().SubsName;
             var day = _membershipDal.GetDetails().SubsDate = DateTime.Now;
             if (result)
