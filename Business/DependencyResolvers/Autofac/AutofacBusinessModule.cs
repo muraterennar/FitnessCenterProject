@@ -27,6 +27,14 @@ namespace Business.DependencyResolvers.Autofac
             builder.RegisterType<AuthManager>().As<IAuthService>();
             builder.RegisterType<JwtHelper>().As<ITokenHelper>();
 
+            //Membership
+            builder.RegisterType<MembershipManager>().As<IMembershipService>();
+            builder.RegisterType<EfMembershipDal>().As<IMembershipDal>();
+
+            //Subscription
+            builder.RegisterType<SubscriptionManager>().As<ISubscriptionService>();
+            builder.RegisterType<EfSubscriptionDal>().As<ISubscriptionDal>();
+
             var assembly = System.Reflection.Assembly.GetExecutingAssembly();
 
             builder.RegisterAssemblyTypes(assembly).AsImplementedInterfaces()

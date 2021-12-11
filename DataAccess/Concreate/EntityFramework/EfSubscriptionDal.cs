@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Concreate.EntityFramework
 {
-    public class EfSubscription : EfEntityRepositoryBase<Subscription, FitnessCenterContext>, ISubscriptionDal
+    public class EfSubscriptionDal : EfEntityRepositoryBase<Subscription, FitnessCenterContext>, ISubscriptionDal
     {
 
     }
