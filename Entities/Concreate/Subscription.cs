@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Entities.Concreate
 {
-    public class Subscription : IEntity
+    public class Subscription:IEntity
     {
         public int Id { get; set; }
         public string Name { get; set; }

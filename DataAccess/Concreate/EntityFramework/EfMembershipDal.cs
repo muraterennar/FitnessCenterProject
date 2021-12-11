@@ -1,5 +1,4 @@
 ﻿using Core.DataAccess.Concreate.EntityFramework;
-using Core.Entities.Concreate;
 using DataAccess.Abstract;
 using Entities.Concreate;
 using Entities.DTOs;
@@ -13,18 +12,28 @@ namespace DataAccess.Concreate.EntityFramework
 {
     public class EfMembershipDal : EfEntityRepositoryBase<Membership, FitnessCenterContext>, IMembershipDal
     {
-        public List<Subscription> GetSubscriptions(User user)
+        public MembershipDetailDto GetDetails()
         {
-            using (var context = new FitnessCenterContext())
+            using (FitnessCenterContext context = new FitnessCenterContext())
             {
-                var result = from subscription in context.Subscriptions
-                             join member in context.Memberships on subscription.Id equals member.SubscriptionId
-                             where member.UserId == user.Id
-                             select new Subscription { Id = member.SubscriptionId, Name = member.SubscriptionName };
+                var result = from member in context.Memberships
+                             join subs in context.Subscriptions on member.SubsId equals subs.Id
+                             join user in context.Users on member.UserId equals user.Id
 
-                return result.ToList();
+                             select new MembershipDetailDto
+                             {
+                                 UserId = user.Id,
+                                 FirstName = user.FirstName,
+                                 LastName = user.LastName,
+                                 Email = user.Email,
+                                 SubsName = subs.Name,
+                                 SubsPrice = member.SubsPrice,
+                                 SubsDate = member.SubsDate,
+                                 SubsFinishDate = member.SubsFinishDate
+                             };
+                return result.FirstOrDefault();
+
             }
         }
     }
 }
-

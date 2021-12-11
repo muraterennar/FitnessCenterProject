@@ -5,13 +5,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Entities.Concreate
+namespace Entities.DTOs
 {
-    public class Membership : IEntity
+    public class MembershipDetailDto : IDto
     {
-        public int Id { get; set; }
         public int UserId { get; set; }
-        public int SubsId { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string Email { get; set; }
+        public string SubsName { get; set; }
         public decimal SubsPrice { get; set; }
         public DateTime SubsDate { get; set; }
         public DateTime SubsFinishDate { get; set; }

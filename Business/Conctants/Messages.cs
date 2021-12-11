@@ -24,5 +24,14 @@ namespace Business.Conctants
         public static string MembershipUpdated = "Üyelik Güncellendi";
         public static string MembershipDetailsListed = "Üyelik Detayları Listelendi";
         public static string AuthorizantionDenied = "Yetkilendirme reddedildi";
+        public static string MembershipsListed = "Üyelikler Listelendi";
+        public static string MembershipListed = "Üyelik Listelendi";
+        public static string SubsAdded = "Abonelik Eklendi";
+        public static string SubsDeleted = "Abonelik Silindi";
+        public static string SubsNotUpdated = "Abonelik Güncellenemedi";
+        public static string SubsUpdated = "Abonelik Güncellendi";
+        public static string SubscriptionsListed = "Abonelikler Listelendi";
+        public static string SubscriptionListed = "Abonelik Listelendi";
+        public static string ChekIfMembershipDate = "Üyelik tarihi Doğrulandı"; 
     }
 }

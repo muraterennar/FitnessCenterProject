@@ -1,5 +1,4 @@
-﻿using Core.Entities.Concreate;
-using Core.Utilities.Results;
+﻿using Core.Utilities.Results;
 using Entities.Concreate;
 using Entities.DTOs;
 using System;
@@ -13,10 +12,10 @@ namespace Business.Abstract
     public interface IMembershipService
     {
         IDataResult<List<Membership>> GetAll();
-        IDataResult<List<Membership>> Get(int id);
-        IDataResult<List<Subscription>> GetSubscriptions(User user);
+        IDataResult<Membership> Get(int id);
+        IDataResult<MembershipDetailDto> GetDetails(int id);
         IResult Add(Membership membership);
-        IResult Update(Membership membership);
         IResult Delete(Membership membership);
+        IResult Update(Membership membership);
     }
 }
