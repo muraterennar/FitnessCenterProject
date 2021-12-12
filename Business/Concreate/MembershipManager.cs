@@ -21,12 +21,21 @@ namespace Business.Concreate
     public class MembershipManager : IMembershipService
     {
         IMembershipDal _membershipDal;
-        ISubscriptionService _subscriptionService;
+        decimal _monthlyPrice;
+        decimal _sixMonthlyPrice;
+        decimal _yearlyPrice;
 
-        public MembershipManager(IMembershipDal membershipDal, ISubscriptionService subscriptionService)
+        public MembershipManager(IMembershipDal membershipDal)
         {
             _membershipDal = membershipDal;
-            _subscriptionService = subscriptionService; ;
+        }
+
+        public MembershipManager(IMembershipDal membershipDal, decimal monthlyPrice = 150, decimal sixMonthlyPrice = 600, decimal yearlyPrice = 1080)
+        {
+            _membershipDal = membershipDal;
+            _monthlyPrice = monthlyPrice;
+            _sixMonthlyPrice = sixMonthlyPrice;
+            _yearlyPrice = yearlyPrice;
         }
 
         [CacheRemoveAspect("IMembershipService.Get")]
@@ -35,15 +44,35 @@ namespace Business.Concreate
         public IResult Add(Membership membership)
         {
             IResult result = BusinessRules.Run(
-                CheckIfMembershipDate(membership.SubsId)
+                CheckIfMembershipUser(membership.UserId)
                 );
             if (result != null)
             {
                 return result;
             }
 
+            if (membership.SubsId == 1)
+            {
+                membership.SubsDate = DateTime.Now;
+                membership.SubsFinishDate = membership.SubsDate.AddDays(30);
+                membership.SubsPrice = _monthlyPrice;
+            }
+            else if (membership.SubsId == 2)
+            {
+                membership.SubsDate = DateTime.Now;
+                membership.SubsFinishDate = membership.SubsDate.AddDays(180);
+                membership.SubsPrice = _sixMonthlyPrice;
+            }
+            else if (membership.SubsId == 3)
+            {
+                membership.SubsDate = DateTime.Now;
+                membership.SubsFinishDate = membership.SubsDate.AddDays(365);
+                membership.SubsPrice = _yearlyPrice;
+            }
+
             _membershipDal.Add(membership);
             return new SuccessResult(Messages.MembershipAdded);
+
         }
 
         [CacheRemoveAspect("IMembershipService.Get")]
@@ -91,34 +120,15 @@ namespace Business.Concreate
             return new ErrorResult(Messages.MembershipNotUpdated);
         }
 
-        private IResult CheckIfMembershipDate(int subsId)
+        private IResult CheckIfMembershipUser(int userId)
         {
-            var result = _membershipDal.GetAll(m => m.SubsId == subsId).Any();
-            var monthlySubscription = _subscriptionService.GetDetails("Aylık Üyelik").Data.Name;
-            var sixMonthlySubscription = _subscriptionService.GetDetails("Altı Aylık Üyelik").Data.Name;
-            var yearlySubscription = _subscriptionService.GetDetails("Yıllık Üyelik").Data.Name;
-            var find = _membershipDal.GetDetails().SubsName;
-            var day = _membershipDal.GetDetails().SubsDate = DateTime.Now;
-            if (result)
+            var find = _membershipDal.GetAll(m => m.UserId == userId).Any();
+            if (find)
             {
-                if (find == monthlySubscription)
-                {
-
-                    var addDay = _membershipDal.GetDetails().SubsFinishDate == day.AddDays(30);
-                }
-                else if (find == sixMonthlySubscription)
-                {
-                    var addDay = _membershipDal.GetDetails().SubsFinishDate == day.AddDays(180);
-                }
-                else if (find == yearlySubscription)
-                {
-                    var addDay = _membershipDal.GetDetails().SubsFinishDate == day.AddDays(365);
-                }
-
-                return new SuccessResult();
+                return new ErrorResult(Messages.UserIdAlreadyExists);
             }
 
-            return new ErrorResult();
+            return new SuccessResult();
         }
     }
 }

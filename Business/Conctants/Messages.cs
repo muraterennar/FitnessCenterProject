@@ -32,6 +32,7 @@ namespace Business.Conctants
         public static string SubsUpdated = "Abonelik Güncellendi";
         public static string SubscriptionsListed = "Abonelikler Listelendi";
         public static string SubscriptionListed = "Abonelik Listelendi";
-        public static string ChekIfMembershipDate = "Üyelik tarihi Doğrulandı"; 
+        public static string ChekIfMembershipDate = "Üyelik tarihi Doğrulandı";
+        public static string UserIdAlreadyExists = "Eklenen Kişinin Üyeliği devam Etmekte";
     }
 }

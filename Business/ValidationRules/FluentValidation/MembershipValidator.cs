@@ -12,7 +12,7 @@ namespace Business.ValidationRules.FluentValidation
     {
         public MembershipValidator()
         {
-            RuleFor(m => m.SubsPrice).GreaterThanOrEqualTo(90);
+            //RuleFor(m => m.SubsPrice).GreaterThanOrEqualTo(90);
         }
     }
 }
