@@ -39,7 +39,7 @@ namespace Business.Concreate
         }
 
         [CacheRemoveAspect("IMembershipService.Get")]
-        [SecuredOperation("product.add, admin")]
+        [SecuredOperation("product.admin")]
         [ValidationAspect(typeof(MembershipValidator))]
         public IResult Add(Membership membership)
         {
@@ -51,6 +51,93 @@ namespace Business.Concreate
                 return result;
             }
 
+            MembershipsController(membership);
+
+            _membershipDal.Add(membership);
+            return new SuccessResult(Messages.MembershipAdded);
+
+        }
+
+        [CacheRemoveAspect("IMembershipService.Get")]
+        [SecuredOperation("product.admin")]
+        [ValidationAspect(typeof(MembershipValidator))]
+        public IResult Delete(Membership membership)
+        {
+            _membershipDal.Delete(membership);
+            return new SuccessResult(Messages.MembershipDeleted);
+        }
+
+        //[SecuredOperation("product.add, admin")]
+        [PerformanceAspect(2)]
+        [CacheAspect]
+        public IDataResult<Membership> Get(int id)
+        {
+            return new SuccessDataResult<Membership>(_membershipDal.Get(m => m.Id == id));
+        }
+
+        //[SecuredOperation("product.add, admin")]
+        [PerformanceAspect(2)]
+        [CacheAspect]
+        public IDataResult<List<Membership>> GetAll()
+        {
+            return new SuccessDataResult<List<Membership>>(_membershipDal.GetAll(), Messages.MembershipsListed);
+        }
+
+        //[SecuredOperation("product.add, admin")]
+        [PerformanceAspect(2)]
+        [CacheAspect]
+        public IDataResult<MembershipDetailDto> GetDetails(int id)
+        {
+            return new SuccessDataResult<MembershipDetailDto>(_membershipDal.GetDetails(m => m.Id == id).ToString());
+        }
+
+        [CacheRemoveAspect("IMembershipService.Get")]
+        [SecuredOperation("product.admin")]
+        [ValidationAspect(typeof(MembershipValidator))]
+        public IResult Update(Membership membership)
+        {
+            var result = _membershipDal.GetAll(m => m.UserId == membership.UserId).Any();
+            if (result)
+            {
+                var find = _membershipDal.GetAll(m=>m.SubsId == membership.SubsId).Any();
+
+                if (!find)
+                {
+                    if (membership.SubsFinishDate < DateTime.Now)
+                    {
+                        MembershipsController(membership);
+
+                        _membershipDal.Update(membership);
+                        return new SuccessResult(Messages.MembershipUpdated);
+                    }
+                    else
+                    {
+                        return new ErrorResult(Messages.OnGoingSubscription);
+                    }
+                }
+                else
+                {
+                    return new ErrorResult(Messages.PersonHasNoMembership);
+                }
+            }
+
+            return new ErrorResult(Messages.MembershipNotUpdated);
+        }
+
+        // **** Results **** \\
+        private IResult CheckIfMembershipUser(int userId)
+        {
+            var find = _membershipDal.GetAll(m => m.UserId == userId).Any();
+            if (find)
+            {
+                return new ErrorResult(Messages.UserIdAlreadyExists);
+            }
+
+            return new SuccessResult();
+        }
+
+        private void MembershipsController(Membership membership)
+        {
             if (membership.SubsId == 1)
             {
                 membership.SubsDate = DateTime.Now;
@@ -69,66 +156,6 @@ namespace Business.Concreate
                 membership.SubsFinishDate = membership.SubsDate.AddDays(365);
                 membership.SubsPrice = _yearlyPrice;
             }
-
-            _membershipDal.Add(membership);
-            return new SuccessResult(Messages.MembershipAdded);
-
-        }
-
-        [CacheRemoveAspect("IMembershipService.Get")]
-        [SecuredOperation("product.add, admin")]
-        [ValidationAspect(typeof(MembershipValidator))]
-        public IResult Delete(Membership membership)
-        {
-            _membershipDal.Delete(membership);
-            return new SuccessResult(Messages.MembershipDeleted);
-        }
-
-        [PerformanceAspect(2)]
-        [CacheAspect]
-        public IDataResult<Membership> Get(int id)
-        {
-            return new SuccessDataResult<Membership>(_membershipDal.Get(m => m.Id == id));
-        }
-
-        [PerformanceAspect(2)]
-        [CacheAspect]
-        public IDataResult<List<Membership>> GetAll()
-        {
-            return new SuccessDataResult<List<Membership>>(_membershipDal.GetAll(), Messages.MembershipsListed);
-        }
-
-        [PerformanceAspect(2)]
-        [CacheAspect]
-        public IDataResult<MembershipDetailDto> GetDetails(int id)
-        {
-            return new SuccessDataResult<MembershipDetailDto>(_membershipDal.GetDetails(m => m.Id == id).ToString());
-        }
-
-        [CacheRemoveAspect("IMembershipService.Get")]
-        [SecuredOperation("product.add, admin")]
-        [ValidationAspect(typeof(MembershipValidator))]
-        public IResult Update(Membership membership)
-        {
-            var result = _membershipDal.GetAll(m => m.UserId == membership.UserId).Any();
-            if (result)
-            {
-                _membershipDal.Update(membership);
-                return new SuccessResult(Messages.MembershipUpdated);
-            }
-
-            return new ErrorResult(Messages.MembershipNotUpdated);
-        }
-
-        private IResult CheckIfMembershipUser(int userId)
-        {
-            var find = _membershipDal.GetAll(m => m.UserId == userId).Any();
-            if (find)
-            {
-                return new ErrorResult(Messages.UserIdAlreadyExists);
-            }
-
-            return new SuccessResult();
         }
     }
 }

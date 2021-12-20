@@ -34,5 +34,7 @@ namespace Business.Conctants
         public static string SubscriptionListed = "Abonelik Listelendi";
         public static string ChekIfMembershipDate = "Üyelik tarihi Doğrulandı";
         public static string UserIdAlreadyExists = "Eklenen Kişinin Üyeliği devam Etmekte";
+        public static string OnGoingSubscription = "Üyeliğiniz Devam Etmekte";
+        public static string PersonHasNoMembership = "Girilen Kişinin Üyeliği Bulunmamaktadır";
     }
 }
