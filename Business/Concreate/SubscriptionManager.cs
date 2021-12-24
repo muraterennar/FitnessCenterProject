@@ -26,7 +26,7 @@ namespace Business.Concreate
         }
 
         [CacheRemoveAspect("ISubscriptionService.Get")]
-        [SecuredOperation("product.add, admin")]
+        [SecuredOperation("product.admin")]
         [ValidationAspect(typeof(SubscriptionValidator))]
         public IResult Add(Subscription subscription)
         {
@@ -35,7 +35,7 @@ namespace Business.Concreate
         }
 
         [CacheRemoveAspect("ISubscriptionService.Get")]
-        [SecuredOperation("product.add, admin")]
+        [SecuredOperation("product.admin")]
         [ValidationAspect(typeof(SubscriptionValidator))]
         public IResult Delete(Subscription subscription)
         {
@@ -44,6 +44,7 @@ namespace Business.Concreate
         }
 
         [PerformanceAspect(2)]
+        [SecuredOperation("product.add, product.admin")]
         [CacheAspect]
         public IDataResult<Subscription> Get(int id)
         {
@@ -51,6 +52,7 @@ namespace Business.Concreate
         }
 
         [PerformanceAspect(2)]
+        [SecuredOperation("product.add, product.admin")]
         [CacheAspect]
         public IDataResult<List<Subscription>> GetAll()
         {
@@ -65,7 +67,7 @@ namespace Business.Concreate
         }
 
         [CacheRemoveAspect("ISubscriptionService.Get")]
-        [SecuredOperation("product.add, admin")]
+        [SecuredOperation("product.admin")]
         [ValidationAspect(typeof(SubscriptionValidator))]
         public IResult Update(Subscription subscription)
         {

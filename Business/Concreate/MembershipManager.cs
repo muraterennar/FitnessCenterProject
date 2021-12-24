@@ -67,7 +67,7 @@ namespace Business.Concreate
             return new SuccessResult(Messages.MembershipDeleted);
         }
 
-        //[SecuredOperation("product.add, admin")]
+        [SecuredOperation("product.add, admin")]
         [PerformanceAspect(2)]
         [CacheAspect]
         public IDataResult<Membership> Get(int id)
@@ -75,7 +75,7 @@ namespace Business.Concreate
             return new SuccessDataResult<Membership>(_membershipDal.Get(m => m.Id == id));
         }
 
-        //[SecuredOperation("product.add, admin")]
+        [SecuredOperation("product.add, admin")]
         [PerformanceAspect(2)]
         [CacheAspect]
         public IDataResult<List<Membership>> GetAll()
@@ -83,7 +83,7 @@ namespace Business.Concreate
             return new SuccessDataResult<List<Membership>>(_membershipDal.GetAll(), Messages.MembershipsListed);
         }
 
-        //[SecuredOperation("product.add, admin")]
+        [SecuredOperation("product.add, admin")]
         [PerformanceAspect(2)]
         [CacheAspect]
         public IDataResult<MembershipDetailDto> GetDetails(int id)

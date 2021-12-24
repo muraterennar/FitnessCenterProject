@@ -13,7 +13,7 @@ namespace DataAccess.Concreate.EntityFramework
     {
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(@"Server=NIRVANA;Database = FitnessCenter;Trusted_Connection=true");
+            optionsBuilder.UseSqlServer(@"Server=(localdb)\MSSQLLocalDB;Database = FitnessCenter;Trusted_Connection=true");
         }
 
         public DbSet<User> Users { get; set; }
