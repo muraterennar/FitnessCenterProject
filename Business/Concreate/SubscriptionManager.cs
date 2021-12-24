@@ -63,7 +63,7 @@ namespace Business.Concreate
         [CacheAspect]
         public IDataResult<Subscription> GetDetails(string subsName)
         {
-            return new SuccessDataResult<Subscription>(_subscriptionDal.GetDetails(s => s.Name == subsName));
+            return new SuccessDataResult<Subscription>(_subscriptionDal.Get(s => s.Name == subsName));
         }
 
         [CacheRemoveAspect("ISubscriptionService.Get")]

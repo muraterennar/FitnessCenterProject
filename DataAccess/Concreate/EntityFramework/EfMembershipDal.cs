@@ -5,6 +5,7 @@ using Entities.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,7 +13,7 @@ namespace DataAccess.Concreate.EntityFramework
 {
     public class EfMembershipDal : EfEntityRepositoryBase<Membership, FitnessCenterContext>, IMembershipDal
     {
-        public MembershipDetailDto GetDetails()
+        public List<MembershipDetailDto> GetDetails(Expression<Func<MembershipDetailDto, bool>> filter)
         {
             using (FitnessCenterContext context = new FitnessCenterContext())
             {
@@ -31,7 +32,7 @@ namespace DataAccess.Concreate.EntityFramework
                                  SubsDate = member.SubsDate,
                                  SubsFinishDate = member.SubsFinishDate
                              };
-                return result.FirstOrDefault();
+                return filter == null ? result.ToList() : result.Where(filter).ToList();
 
             }
         }

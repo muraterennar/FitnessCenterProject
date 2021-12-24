@@ -51,7 +51,7 @@ namespace Business.Concreate
                 return result;
             }
 
-            MembershipsController(membership);
+            MembershipsAddController(membership);
 
             _membershipDal.Add(membership);
             return new SuccessResult(Messages.MembershipAdded);
@@ -67,7 +67,7 @@ namespace Business.Concreate
             return new SuccessResult(Messages.MembershipDeleted);
         }
 
-        [SecuredOperation("product.add, admin")]
+        //[SecuredOperation("product.add, admin")]
         [PerformanceAspect(2)]
         [CacheAspect]
         public IDataResult<Membership> Get(int id)
@@ -75,7 +75,7 @@ namespace Business.Concreate
             return new SuccessDataResult<Membership>(_membershipDal.Get(m => m.Id == id));
         }
 
-        [SecuredOperation("product.add, admin")]
+        //[SecuredOperation("product.add, admin")]
         [PerformanceAspect(2)]
         [CacheAspect]
         public IDataResult<List<Membership>> GetAll()
@@ -83,46 +83,31 @@ namespace Business.Concreate
             return new SuccessDataResult<List<Membership>>(_membershipDal.GetAll(), Messages.MembershipsListed);
         }
 
-        [SecuredOperation("product.add, admin")]
+        //[SecuredOperation("product.add, admin")]
         [PerformanceAspect(2)]
         [CacheAspect]
-        public IDataResult<MembershipDetailDto> GetDetails(int id)
+        public IDataResult<List<MembershipDetailDto>> GetDetails(int userId)
         {
-            return new SuccessDataResult<MembershipDetailDto>(_membershipDal.GetDetails(m => m.Id == id).ToString());
+            return new SuccessDataResult<List<MembershipDetailDto>>(_membershipDal.GetDetails(m => m.UserId == userId));
         }
 
         [CacheRemoveAspect("IMembershipService.Get")]
-        [SecuredOperation("product.admin")]
+        //[SecuredOperation("product.admin")]
         [ValidationAspect(typeof(MembershipValidator))]
         public IResult Update(Membership membership)
         {
-            var result = _membershipDal.GetAll(m => m.UserId == membership.UserId).Any();
-            if (result)
+            IResult result = BusinessRules.Run(
+                CheckIfMembershipUpdateUser(membership)
+                );
+            if (result != null)
             {
-                var find = _membershipDal.GetAll(m=>m.SubsId == membership.SubsId).Any();
-
-                if (!find)
-                {
-                    if (membership.SubsFinishDate < DateTime.Now)
-                    {
-                        MembershipsController(membership);
-
-                        _membershipDal.Update(membership);
-                        return new SuccessResult(Messages.MembershipUpdated);
-                    }
-                    else
-                    {
-                        return new ErrorResult(Messages.OnGoingSubscription);
-                    }
-                }
-                else
-                {
-                    return new ErrorResult(Messages.PersonHasNoMembership);
-                }
+                return result;
             }
 
-            return new ErrorResult(Messages.MembershipNotUpdated);
+            return MembershipsUpdateController(membership);
+
         }
+
 
         // **** Results **** \\
         private IResult CheckIfMembershipUser(int userId)
@@ -136,7 +121,24 @@ namespace Business.Concreate
             return new SuccessResult();
         }
 
-        private void MembershipsController(Membership membership)
+        private IResult CheckIfMembershipUpdateUser(Membership membership)
+        {
+            var find = _membershipDal.GetAll(m => m.UserId == membership.UserId).Any();
+            if (find)
+            {
+
+                if (membership.SubsFinishDate < DateTime.Now)
+                {
+                    return new SuccessResult();
+                }
+
+            }
+
+            return new ErrorResult(Messages.UserIdAlreadyExists);
+
+        }
+
+        private void MembershipsAddController(Membership membership)
         {
             if (membership.SubsId == 1)
             {
@@ -155,6 +157,30 @@ namespace Business.Concreate
                 membership.SubsDate = DateTime.Now;
                 membership.SubsFinishDate = membership.SubsDate.AddDays(365);
                 membership.SubsPrice = _yearlyPrice;
+            }
+        }
+
+        private IResult MembershipsUpdateController(Membership membership)
+        {
+            var find = _membershipDal.GetAll(m => m.UserId == membership.UserId).Any();
+
+            if (find)
+            {
+                if (membership.SubsFinishDate < DateTime.Now)
+                {
+                    MembershipsAddController(membership);
+
+                    _membershipDal.Update(membership);
+                    return new SuccessResult(Messages.MembershipUpdated);
+                }
+                else
+                {
+                    return new ErrorResult(Messages.OnGoingSubscription);
+                }
+            }
+            else
+            {
+                return new ErrorResult(Messages.PersonHasNoMembership);
             }
         }
     }

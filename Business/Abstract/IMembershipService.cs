@@ -13,7 +13,7 @@ namespace Business.Abstract
     {
         IDataResult<List<Membership>> GetAll();
         IDataResult<Membership> Get(int id);
-        IDataResult<MembershipDetailDto> GetDetails(int id);
+        IDataResult<List<MembershipDetailDto>> GetDetails(int userId);
         IResult Add(Membership membership);
         IResult Delete(Membership membership);
         IResult Update(Membership membership);
